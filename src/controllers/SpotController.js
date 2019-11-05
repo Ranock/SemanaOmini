@@ -4,14 +4,19 @@ const User = require('../models/User')
     module.exports = {
         async index(req, res){
             const {tech} = req.query;
-            const spot = await Spot.find({techs : tech})
+            let spot;
+            if (tech)
+             spot = await Spot.find({techs : tech})
+            else
+             spot = await Spot.find({})
             return res.json(spot);
         },
         
-        async store(req, res){
+        async store(req, res){           
             const {filename} = req.file;
             const {company, price, techs} = req.body;
             const {user_id} = req.headers;
+            console.log(user_id);
             const user = await User.findById(user_id); 
             if (!user)
                return res.status(404).json({error : 'Usuario não existe'});
